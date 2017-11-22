@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+	<ui:define name="title">login</ui:define>
+	<ui:define name="content">
+		<h1>Your Orders</h1>
+
+		<p:commandButton value="Print" type="button" icon="ui-icon-print"
+			style="display:block;margin-bottom: 20px">
+			<p:printer target="image" />
+		</p:commandButton>
+		<h:panelGroup layout="block" id="image">
+			<p:dataTable var="order"
+				value="#{ordersManagement.displayOrderList()}">
+				<p:column headerText="Id">
+					<h:outputText value="#{order.orderId}" />
+				</p:column>
+
+
+
+
+				<p:column headerText="Contract">
+					<p:dialog modal="true" widgetVar="statusDialog" header="Status"
+						draggable="false" closable="false" resizable="false">
+						<p:graphicImage name="/demo/images/ajaxloadingbar.gif" />
+					</p:dialog>
+
+					<h:form>
+						<h:commandButton id="button" value="Download PDF"
+							action="#{ordersManagement.downloadPdf(order.orderId)}" />
+					</h:form>
+
+					<script type="text/javascript">
+function start() {
+    PF('statusDialog').show();
+}
+ 
+function stop() {
+    PF('statusDialog').hide();
+}
+</script>
+
+				</p:column>
+				<p:column headerText="products">
+					<h:form>
+						<p:commandButton update="productDetails"
+							oncomplete="PF('dlg2').show()" title="View Detail">
+							<f:setPropertyActionListener value="#{order}"
+								target="#{ordersManagement.order}" />
+						</p:commandButton>
+					</h:form>
+				</p:column>
+			</p:dataTable>
+
+			<p:dialog header="Modal Dialog"
+				rendered="#{not empty ordersManagement.order}" widgetVar="dlg2"
+				modal="true" height="100">
+				<p:outputPanel id="productDetails" style="text-align:center;">
+					<h:outputText value="Products." />
+
+					<p:dataTable var="p" value="#{ordersManagement.order.carts}">
+						<p:column headerText="name">
+							<h:outputText value="#{p.cartPk.product.productName}" />
+						</p:column>
+
+						<p:column headerText="quantity">
+							<h:outputText value="#{p.quantity}" />
+						</p:column>
+
+						<p:column headerText="unit price">
+							<h:outputText value="#{p.cartPk.product.unitPrice}" />
+						</p:column>
+
+						<p:column headerText="stat">
+							<h:outputText value="#{p.stat}" />
+						</p:column>
+						<p:column headerText="total">
+							<h:outputText
+								value="#{cartsManagement.totalProductPrice(p.quantity,p.cartPk.product.unitPrice)}" />
+						</p:column>
+					</p:dataTable>
+				</p:outputPanel>
+			</p:dialog>
+
+
+		</h:panelGroup>
+
+
+	</ui:define>
+</ui:composition>

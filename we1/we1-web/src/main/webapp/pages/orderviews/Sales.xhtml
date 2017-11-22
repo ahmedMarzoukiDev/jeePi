@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+	<ui:define name="title">login</ui:define>
+	<ui:define name="content">
+		<h1>Your Orders</h1>
+		<h:form id="form">
+
+
+			<p:dataTable var="ca" value="#{ordersManagement.displaySales()}">
+				<p:column headerText="Id">
+					<h:outputText value="#{ca.cartPk.product.productId}" />
+				</p:column>
+				<p:column headerText="product name">
+					<h:outputText value="#{ca.cartPk.product.productName}" />
+				</p:column>
+				<p:column headerText="quantity">
+					<h:outputText value="#{ca.quantity}" />
+				</p:column>
+				<p:column headerText="total price">
+					<h:outputText
+						value="#{cartsManagement.totalProductPrice(ca.quantity,ca.cartPk.product.unitPrice)}" />
+				</p:column>
+				<p:column headerText="gain">
+					<h:outputText
+						value="#{cartsManagement.totalProductPrice(ca.quantity,ca.cartPk.product.unitPrice)-(ca.quantity*ca.cartPk.product.unitCost)}" />
+				</p:column>
+				<p:column headerText="stat">
+					<h:outputText value="#{ca.stat}" />
+				</p:column>
+				<p:column headerText="stat">
+
+					<p:commandButton update=":form:cartSt"
+						oncomplete="PF('dlg2').show()" title="View Detail">
+						<f:setPropertyActionListener value="#{ca}"
+							target="#{ordersManagement.cart}" />
+					</p:commandButton>
+
+				</p:column>
+			</p:dataTable>
+
+
+
+
+
+
+			<script type="text/javascript">
+function start() {
+    PF('statusDialog').show();
+}
+ 
+function stop() {
+    PF('statusDialog').hide();
+}
+</script>
+			<p:dialog header="Modal Dialog"
+				rendered="#{not empty ordersManagement.cart}" widgetVar="dlg2"
+				modal="true" height="100">
+				<p:outputPanel id="cartSt">
+					<h3 style="margin-top: 0">Basic</h3>
+					<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+
+
+						<p:selectOneRadio id="console"
+							value="#{ordersManagement.cart.stat}">
+							<f:selectItem itemLabel="canceled" itemValue="canceled" />
+							<f:selectItem itemLabel="pending" itemValue="pending" />
+							<f:selectItem itemLabel="approved" itemValue="approved" />
+						</p:selectOneRadio>
+						<p:commandButton value="update stat"
+							action="#{ordersManagement.updateStat(ordersManagement.cart.cartPk.user.userId,ordersManagement.cart.cartPk.product.productId,ordersManagement.cart.order.orderId)}"></p:commandButton>
+
+
+					</h:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>

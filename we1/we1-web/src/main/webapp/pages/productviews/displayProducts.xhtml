@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+	<ui:define name="title">login</ui:define>
+	<ui:define name="content">
+		<h1>Products display</h1>
+		<p:tooltip />	
+    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+<h:form id="form">
+    
+ 
+    <p:dataList value="#{productsManagement.displayProducts()}" var="p" type="unordered" itemType="none" paginator="true" rows="10" styleClass="paginated">
+        <f:facet name="header">
+            Paginator
+        </f:facet>
+            <p:commandLink update=":form:productDetails" oncomplete="PF('carDialog').show()" title="View Detail" styleClass="ui-icon ui-icon-search" style="float:left;margin-right:10px">
+            <f:setPropertyActionListener value="#{p}" target="#{productsManagement.product}" />
+           
+        </p:commandLink>
+           
+          
+           
+        <h:outputText value="#{p.productName}, price : , #{p.unitPrice}, $" style="display:inline-block"/>
+  		<p:spacer width="100" height="10" />
+  		 <p:growl id="growl" showDetail="true" sticky="false" />  
+ 
+   <p:commandButton value="add to cart" actionListener="#{cartsManagement.addCart(p.productId)}" update="growl" icon="ui-icon-check" validateClient="true" style="margin-right:10px;display:inline-block;"/>
+    </p:dataList>
+    <p:dialog header="modify product" widgetVar="carDialog" modal="true" showEffect="blind" hideEffect="explode" resizable="false">
+        <p:outputPanel id="productDetails" style="text-align:center;">
+            <p:panelGrid  columns="2" rendered="#{not empty productsManagement.product}" columnClasses="label,value">
+              
+ 				 <h:outputLabel value="#{productsManagement.product.productName}" style="font-weight:bold"/>
+			        
+			        <h:outputLabel value="#{productsManagement.product.productDescription}" style="font-weight:bold"/>
+			        
+			        <h:outputLabel value="#{productsManagement.product.productQuantity}" style="font-weight:bold"/>
+			        
+			        <h:outputLabel value="#{productsManagement.product.unitPrice}" style="font-weight:bold"/>
+			        
+			        <p:gmap id="gmap" center="36.890257,30.707417" zoom="13" type="HYBRID" style="width:600px;height:400px"
+    model="#{productsManagement.displayMap()}"  />
+           
+            </p:panelGrid>
+        </p:outputPanel>
+    </p:dialog>
+    <script src="http://maps.google.com/maps/api/js?key=AIzaSyBNl8BvlqUdZz9qMQi4ea7k7aArAjew4RI" />
+ </h:form>
+</ui:define>
+
+
+</ui:composition>

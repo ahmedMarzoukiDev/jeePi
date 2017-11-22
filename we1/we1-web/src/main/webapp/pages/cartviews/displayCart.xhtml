@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+	<ui:define name="title">login</ui:define>
+	<ui:define name="content">
+		<h1>Your Cart</h1>
+		<p:tooltip />	
+    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+		<h:form> 
+    <p:dataScroller value="#{cartsManagement.cartsList.source}" var="carts" chunkSize="10">
+        <f:facet name="header">
+            Scroll Down to Load More products
+        </f:facet>
+ 
+        <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
+            <!-- <p:graphicImage name="demo/images/car/#{car.brand}-big.gif" />  -->
+ 
+            <p:outputPanel>
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputText value="ProductName:" />
+                    <h:outputText value="#{carts.cartPk.product.productName}" style="font-weight: bold"/>
+ 
+ 					<h:outputText value="quantity:" style="display:inline-block" />
+ 					 <p:inplace id="quantity">
+			            <p:inputText value="#{carts.quantity}" />
+			        </p:inplace>
+			       
+                    <h:outputText value="unitPrice:" />
+                    <h:outputText value="#{carts.cartPk.product.unitPrice}" style="font-weight: bold"/>
+                    
+                    <h:outputText value="total product price:" />
+                    <h:outputText value="#{cartsManagement.totalProductPrice(carts.quantity,carts.cartPk.product.unitPrice)}" style="font-weight: bold"/>
+					 <p:commandButton value="update quantity" actionListener="#{cartsManagement.updateQuantity(carts.quantity,carts.cartPk.product.productId,carts.cartPk.user.userId)}" update = "@form" icon="ui-icon-check" validateClient="true" style="margin-right:10px;display:inline-block;"/>
+                  	<p:commandButton value="cancel product" action="#{cartsManagement.deleteProductFromCart(carts.cartPk.product.productId,carts.cartPk.user.userId,carts.cartPk.cartOrder.cartOrderId)}" update = "@form" icon="ui-icon-check" validateClient="true" style="margin-right:10px;display:inline-block;"/>
+                </h:panelGrid>
+            </p:outputPanel>
+        </h:panelGrid>
+    </p:dataScroller>
+</h:form>
+		
+		
+		
+		
+		
+		<h1>Order</h1>
+<h:form>
+<p:growl id="msg" showDetail="true" escape="false" />
+ <h3>Your Cart</h3>
+    <p:pickList id="PojoPickList" value="#{cartsManagement.cartsList}" var="ca" effect="bounce"
+                itemValue="#{ca}" itemLabel="#{ca.cartPk.product.productName}" showSourceControls="true" showTargetControls="true" showCheckbox="true" responsive="true"
+                showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="primeFacesPickListConverter">
+ 
+        <f:facet name="sourceCaption">Cart</f:facet>
+        <f:facet name="targetCaption">Order</f:facet>
+ 
+        <p:ajax event="transfer" listener="#{cartsManagement.onTransfer}" update="msg" />
+        
+        <p:column style="width:10%">
+            <h:outputText styleClass="ui-theme" />
+        </p:column>
+ 
+        <p:column style="width:90%;">
+            <h:outputText value="#{ca.cartPk.product.productName}" />
+        </p:column>
+    </p:pickList>
+ 
+    <p:commandButton value="Submit" action="#{ordersManagement.addOrder(cartsManagement.cartsList.target)}" update="displayThemes" oncomplete="PF('themesDialog').show()" style="margin-top:5px" />
+ 
+ 
+    <p:dialog modal="true" showEffect="fade" hideEffect="fade" widgetVar="themesDialog">
+        <h:panelGrid id="displayThemes" columns="2">
+            <h:outputText value="Source: " style="font-weight:bold" />
+            <ui:repeat value="#{cartsManagement.cartsList.source}" var="cartsource">
+                <h:outputText value="#{cartsource.cartPk.product.productDescription}" style="margin-right:5px" />
+            </ui:repeat>
+ 
+            <h:outputText value="Target: " style="font-weight:bold" />
+            <ui:repeat value="#{cartsManagement.cartsList.target}" var="carttarget">
+                <h:outputText value="#{carttarget.cartPk.product.productName}" style="margin-right:5px" />
+            </ui:repeat>
+        </h:panelGrid>
+    </p:dialog>
+</h:form>
+	</ui:define>
+
+
+</ui:composition>

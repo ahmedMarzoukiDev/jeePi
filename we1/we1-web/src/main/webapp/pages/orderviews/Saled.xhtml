@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+	<ui:define name="title">saled products</ui:define>
+	<ui:define name="content">
+		<h1>sold products</h1>
+<h:form id="form">
+
+
+		<p:dataTable var="cart" value="#{ordersManagement.displaySaled()}">
+			<p:column headerText="Id">
+				<h:outputText value="#{cart.cartPk.product.productId}" />
+			</p:column>
+			<p:column headerText="client">
+				<h:outputText value="#{cart.cartPk.user.name}" />
+			</p:column>
+			<p:column headerText="product name">
+				<h:outputText value="#{cart.cartPk.product.productName}" />
+			</p:column>
+			<p:column headerText="quantity">
+				<h:outputText value="#{cart.quantity}" />
+			</p:column>
+			<p:column headerText="total price">
+				<h:outputText
+					value="#{cartsManagement.totalProductPrice(cart.quantity,cart.cartPk.product.unitPrice)}" />
+			</p:column>
+			<p:column headerText="gain">
+				<h:outputText
+					value="#{cartsManagement.totalProductPrice(cart.quantity,cart.cartPk.product.unitPrice)-(cart.quantity*cart.cartPk.product.unitCost)}" />
+			</p:column>
+			<p:column headerText="stat">
+				<h:outputText value="#{cart.stat}" />
+			</p:column>
+			
+		</p:dataTable>
+
+
+
+
+
+
+		<script type="text/javascript">
+function start() {
+    PF('statusDialog').show();
+}
+ 
+function stop() {
+    PF('statusDialog').hide();
+}
+</script>
+		
+
+
+</h:form>
+	</ui:define>
+</ui:composition>

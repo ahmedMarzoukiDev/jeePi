@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:megaMenu orientation="#{megaMenuView.orientation}"
+		style="margin-top:20px">
+		<p:submenu label="products" icon="ui-icon-check">
+			<p:column>
+				<p:submenu label="catalog">
+					<p:menuitem value="display the list of products"
+						url="http://localhost:18080/we1-web/pages/productviews/displayProducts.jsf" />
+				</p:submenu>
+				<p:submenu label="owned products">
+					<p:menuitem value="display the list of owned products"
+						url="http://localhost:18080/we1-web/pages/productviews/displayOwnedProducts.jsf" />
+					<p:menuitem value="add a new product"
+						url="http://localhost:18080/we1-web/pages/productviews/addProducts.jsf" />
+				</p:submenu>
+			</p:column>
+		</p:submenu>
+
+		<p:submenu label="reservations" icon="ui-icon-document">
+
+			<p:column>
+				<p:submenu label="reservations">
+					<p:menuitem value="your cart"
+						url="http://localhost:18080/we1-web/pages/cartviews/displayCart.jsf" />
+					<p:menuitem value="your orders"
+						url="http://localhost:18080/we1-web/pages/orderviews/displayOrderList.jsf" />
+				</p:submenu>
+			</p:column>
+		</p:submenu>
+
+		<p:submenu label="manage your sales" icon="ui-icon-pencil">
+			<p:column>
+				<p:submenu label="Sales">
+					<p:menuitem value="display list of sales" url="http://localhost:18080/we1-web/pages/orderviews/Sales.jsf" />
+				</p:submenu>
+				<p:submenu label="sales history">
+					<p:menuitem value="products sold" url="http://localhost:18080/we1-web/pages/orderviews/Saled.jsf" />
+						<p:menuitem value="your dashboard" url="http://localhost:18080/we1-web/pages/productviews/stats.jsf" />
+				</p:submenu>
+			</p:column>
+
+			
+		</p:submenu>
+
+
+	</p:megaMenu>
+
+</ui:composition>
